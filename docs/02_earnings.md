@@ -12,67 +12,41 @@ uint256 totalSupply;
 * LP余额
 * LP总量
 
-移除流动性时计算：
+销毁（移除流动性）时计算：
 
-[
-ETH_{out}
-=========
+```text
+ETH_out = LP_burn * ETH_reserve / LP_total
 
-LP_{burn}
-\times
-\frac{ETH_{reserve}}
-{LP_{total}}
-]
+Token_out = LP_burn * Token_reserve / LP_total
+```
 
-[
-Token_{out}
-===========
-
-LP_{burn}
-\times
-\frac{Token_{reserve}}
-{LP_{total}}
-]
-
-也就是说：
-
-**LP 的价值取决于当前池子的储备量。**
+也就是说：**LP 的价值取决于当前池子的储备量。**
 
 ## 举个例子
 
 ### Alice 与 Bob 的初始状态（t=0）
 
-Alice：
+Alice 创建池子：
 
 * 100 ETH
 * 10000 ABC
 
-获得：
-
-100 LP
+获得：100 LP
 
 Bob 后来加入：
 
 * 100 ETH
 * 10000 ABC
 
-获得：
+获得：100 LP
 
-100 LP
+此时，双方各占：100 / 200 = 50% LP
 
-此时：
-
-| 项目     | 数值 |
-| -------- | ---- |
-| LP总量   | 200  |
-| Alice LP | 100  |
-| Bob LP   | 100  |
-
-双方各占：
-
-[
-100/200=50%
-]
+| 项目     | ETH | ABC   | LP  | LP 占比     |
+| -------- | --- | ----- | --- | ----------- |
+| Alice LP | 100 | 10000 | 100 | 100/200=50% |
+| Bob LP   | 100 | 10000 | 100 | 100/200=50% |
+| LP总量   | 200 | 20000 | 200 |             |
 
 ### 有人来 Swap 了，产生手续费（t=1）
 
@@ -83,35 +57,25 @@ Bob 后来加入：
 * 220 ETH
 * 22000 ABC
 
-LP总量仍然：
-
-200
+LP总量仍然：200 LP
 
 ### Alice 移除流动性（t=2）
 
-Alice销毁：
-
-100 LP
+Alice销毁：100 LP
 
 得到：
 
-[
-100\times220/200
-================
+```text
+ETH_out = LP_burn * ETH_reserve / LP_total
+        = 100 * 220 / 200
+        = 110 ETH
 
-110 ETH
-]
+Token_out = LP_burn * Token_reserve / LP_total
+          = 100 * 22000 / 200
+          = 11000 ABC
+```
 
-[
-100\times22000/200
-==================
-
-11000 ABC
-]
-
-收益来自：
-
-池子储备增长。
+收益来自：**池子储备增长。**
 
 ## 收益本质
 
